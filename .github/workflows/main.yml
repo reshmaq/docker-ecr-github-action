@@ -25,4 +25,4 @@ jobs:
       shell: bash
 
     - name: Push to ECR
-      run: docker push ${{ secrets.AWS_REGISTRY_URI }}/your-image-name:latest
+      run: docker push ${{ secrets.AWS_REGISTRY_URI }}/sample_image:latest
