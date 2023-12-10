@@ -31,3 +31,12 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+    - name: Bonus Task - Notify on Success or Failure
+      if: always()
+      run: |
+        if [ ${{ job.status }} == 'success' ]; then
+          echo "Success! Docker image successfully pushed to ECR."
+        else
+          echo "Failure! Docker image push to ECR failed."
+        fi
