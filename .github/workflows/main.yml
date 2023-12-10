@@ -1,11 +1,13 @@
-name: Build and push image to ECR
+name: Build and push image to ECR with Scan and Email Notification
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   build:
-    name: Build Image
+    name: Build Image with Scan
     runs-on: ubuntu-latest
 
     steps:
@@ -23,11 +25,35 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Build, tag, and push image to Amazon ECR
+    - name: Build and Scan Docker Image
+      run: |
+        docker build -t ${{ steps.login-ecr.outputs.registry }}/docker-ecr-github-action:demo_sample_image .
+        docker scan --accept-license -o trivy-report.json ${{ steps.login-ecr.outputs.registry }}/docker-ecr-github-action:demo_sample_image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: docker-ecr-github-action
-        IMAGE_TAG: demo_sample_image
+
+    - name: Push Docker Image to Amazon ECR
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/docker-ecr-github-action:demo_sample_image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+
+    - name: Notify on Email (Success)
+      if: success()
+      uses: mapup/action-notify@v2
+      with:
+        github_token: ${{ github.token }}
+        to: reshma.aq97@gmail.com
+        subject: Docker image successfully pushed to ECR with image scan
+        message: |
+          The Docker image has been successfully pushed to ECR with image scan.
+
+    - name: Notify on Email (Failure)
+      if: failure()
+      uses: mapup/action-notify@v2
+      with:
+        github_token: ${{ github.token }}
+        to: reshma.aq97@gmail.com
+        subject: Failed to push Docker image to ECR with image scan
+        message: |
+          Failed to push Docker image to ECR with image scan.
