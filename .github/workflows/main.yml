@@ -40,7 +40,7 @@ jobs:
 
     - name: Notify on Email (Success)
       if: success()
-      uses: mapup/action-notify@v2
+      uses: softprops/action-notify@v2
       with:
         github_token: ${{ github.token }}
         to: reshma.aq97@gmail.com
@@ -50,7 +50,7 @@ jobs:
 
     - name: Notify on Email (Failure)
       if: failure()
-      uses: mapup/action-notify@v2
+      uses: softprops/action-notify@v2
       with:
         github_token: ${{ github.token }}
         to: reshma.aq97@gmail.com
