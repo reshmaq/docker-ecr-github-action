@@ -60,9 +60,11 @@ Create and add a Dockerfile to the root of your project. This Dockerfile will be
 **_Step #4_**
 **4.1: Develop GitHub Actions Workflow**
     - Create a .github/workflows directory in your repository.
+    -The workflow consists of several steps, each performing a specific task.Key steps include checking out the code, configuring AWS credentials, logging in to Amazon ECR, and building/pushing the Docker image.
     - Inside this directory, add a YAML file (e.g., main.yml) to define the workflow.
     ```
-                          name: Build and push image to ECR
+              yaml
+                      name: Build and push image to ECR
                       
                       on:
                         push
@@ -103,6 +105,7 @@ Create and add a Dockerfile to the root of your project. This Dockerfile will be
     - AWS_SECRET_ACCESS_KEY
     - AWS_REGION
     - AWS_REGISTRY_URI (this should be the URI of your ECR repository)
+      ![image](https://github.com/reshmaq/docker-ecr-github-action/assets/121748445/68625974-15de-41a1-a5b6-5d8352a23a41)
 
 
 
