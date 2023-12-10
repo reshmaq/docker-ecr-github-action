@@ -1,47 +1,33 @@
-name: Build and Push Docker Image to ECR
+name: Build and push image to ECR
 
 on:
-  push:
-    branches:
-      - main
+  push
 
 jobs:
   build:
+    name: Build Image
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+    - name: Check out code
+      uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and Push Docker Image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: docker-ecr-github-action
-          IMAGE_TAG: demo_sample_image
-        run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-      - name: Notify on Success or Failure
-        if: always()
-        run: |
-          if [ ${{ job.status }} == 'success' ]; then
-            echo "Docker image successfully pushed to ECR!"
-            # Send email on success
-            echo "Success! Docker image successfully pushed to ECR." | mail -s "GitHub Actions Success" your-email@example.com
-          else
-            echo "Docker image push to ECR failed!"
-            # Send email on failure
-            echo "Failure! Docker image push to ECR failed." | mail -s "GitHub Actions Failure" your-email@example.com
-          fi
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: docker-ecr-github-action
+        IMAGE_TAG: demo_sample_image
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
