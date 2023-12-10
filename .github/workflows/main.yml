@@ -33,6 +33,6 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
     - name: Bonus Task - Image Scanning for Vulnerabilities
-      uses: aquasecurity/trivy-action@v0.17.2
+      uses: aquasecurity/trivy-action@main
       with:
         image-ref: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
