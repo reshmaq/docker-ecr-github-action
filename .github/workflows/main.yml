@@ -44,7 +44,7 @@ jobs:
     - name: Run Code Scanning
       uses: github/codeql-action/init@v2
       with:
-        languages: all
+        languages: javascript
 
     - name: Upload Code Scanning results
       uses: github/codeql-action/upload-sarif@v2
