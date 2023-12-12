@@ -48,7 +48,3 @@ jobs:
         # Specify the path where CodeQL will generate the SARIF file
         output: ./codeql-results
 
-    - name: Upload Code Scanning results
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: ./codeql-results/codeql-results.sarif
