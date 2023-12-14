@@ -44,7 +44,7 @@ jobs:
     - name: Run Code Scanning
       uses: github/codeql-action/init@v2
       with:
-        languages: javascript
+        languages: python
         # Specify the path where CodeQL will generate the SARIF file
         output: ./codeql-results
 
